@@ -1,0 +1,41 @@
+# Ignore compiled files
+*.class
+*.jar
+*.war
+*.ear
+
+# Ignore IDE-specific files
+.idea/
+.vscode/
+
+# Ignore build output directories
+/target/
+/out/
+/bin/
+
+# Ignore logs and temporary files
+*.log
+*.log.*
+*.tmp
+
+# Ignore configuration files
+*.config
+*.properties
+*.yaml
+*.yml
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore Personal Files
+temp_notes.md
+
+# Ignore Personal Directories
+notes/
+
+# Ignore In-Progress Work
+tasksuke/
+r_alab_308a.4.1_working_with_external_data/
+mern_auth/
+sba_316_the_dom/
