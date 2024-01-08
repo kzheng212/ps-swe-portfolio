@@ -49,6 +49,7 @@ app.use((req, res, next) => {
 
 app.use(morgan("dev"));
 app.use(express.static("./styles"));
+app.use(express.static("./assets"));
 
 // Routes
 app.use("/user", userRouter);
@@ -56,7 +57,7 @@ app.use("/product", productRouter);
 
 app.get("/", (req, res) => {
   // res.send("<h1>Hello Express</h1>");
-  res.render("index", { title: "Hello Engine!", content: "I am an engine!" });
+  res.render("index", {title: "Hello Engine!", content: "I am an engine!" });
 });
 
 app.get("/current-user", (req, res) => {
@@ -69,6 +70,10 @@ app.get("/current-user", (req, res) => {
 
 app.get("/login", (req, res) => {
   res.send("<h1>Login Page</h1>");
+});
+
+app.get("/download", (req, res)=>{
+  res.download("./assets/photo-15.png");
 });
 
 app.all("*", (req, res) => {
