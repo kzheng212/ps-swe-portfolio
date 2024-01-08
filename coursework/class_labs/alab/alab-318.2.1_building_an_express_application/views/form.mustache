@@ -1,0 +1,45 @@
+<!-- Login/Register Page -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechatopia {{title}} Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+
+  <body class="class-body">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 id="myModalLabel" class="modal-title">
+                    <!-- "Login/Register to Mechatopia" -->
+                    <!-- Login/Register is the title -->
+                    {{title}} to CyberSphere 
+                </h4>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form action="https://mechatopia.com/" role="form" method="GET">
+                    <div class="form-group">
+                        <label for="name">Name: </label>
+                        <input type="text," id="name" class="form-control" placeholder="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email: </label>
+                        <input type="email," id="email" class="form-control" placeholder="name@email.com" name="email">
+                    </div>
+                    <button class="btn btn-primary" type="submit" value="submit">Submit</button>
+                    <button class="btn btn-default" type="button" value="cancel">Cancel</button>
+                </form>
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <h4>Form</h4>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
