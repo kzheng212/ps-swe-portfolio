@@ -27,6 +27,7 @@
 # Ignore OS-specific files
 .DS_Store
 Thumbs.db
+.env
 
 # Ignore Modules
 node_modules/

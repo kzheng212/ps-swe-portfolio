@@ -1,7 +1,10 @@
 const express = require("express");
 
-const users = require("./data/users");
-const posts = require("./data/posts");
+const users = require("./routes/users");
+const posts = require("./routes/posts");
+
+// Bringing in error function
+const error = require("./utilities/error");
 
 // Assigning Express function to Const App
 const app = express();
@@ -26,79 +29,114 @@ const port = 3000;
   > Together, these lines enable your Express.js application to handle requests with both JSON and URL-encoded payloads. This is important because different types of clients may send data in different formats, and these middlewares help in parsing and extracting relevant information from the request bodies. 
 */
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/**
- * GET /api/users
- */
-app
-  .route("/api/users")
-  .get((req, res) => {
-    res.json(users);
-  })
-  .post((req, res) => {
-    if (req.body.name && req.body.username && req.body.email) {
-      if (users.find((u) => u.username == req.body.username)) {
-        res.json({ error: "Username is taken!" });
-        return;
-      }
+// New logging middleware to help us keep track of
+// requests during testing!
+app.use((req, res, next) => {
+  const time = new Date();
 
-      const user = {
-        id: users[users.length - 1].id + 1,
-        name: req.body.name,
-        username: req.body.username,
-        email: req.body.email,
-      };
-
-      users.push(user);
-      res.json(users[user.length - 1]);
-    } else res.json({ error: "Insufficient data" });
-    // console.log(req.body);
-    // res.json(req.body);
-  });
-
-/**
- * @method GET /api/users/:id
- * @param :id
- */
-
-app.get("/api/users/:id", (req, res, next) => {
-  const user = users.find((u) => u.id == req.params.id);
-  console.log(user);
-  if (user) res.json(user);
-  else next();
+  console.log(
+    `-----
+${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`
+  );
+  if (Object.keys(req.body).length > 0) {
+    console.log("Containing the data:");
+    console.log(`${JSON.stringify(req.body)}`);
+  }
+  next();
 });
 
-/**
- * GET /api/posts
- *
- */
+// Valid API Keys.
+const apiKeys = ["perscholas", "ps-example", "hJAsknw-L198sAJD-l3kasx"];
 
-app.get("/api/posts", (req, res) => {
-  res.json(posts);
+// New middleware to check for API keys!
+// Note that if the key is not verified,
+// we do not call next(); this is the end.
+// This is why we attached the /api/ prefix
+// to our routing at the beginning!
+app.use("/api", function (req, res, next) {
+  var key = req.query["api-key"];
+
+  // Check for the absence of a key.
+  if (!key) next(error(400, "API Key Required"));
+
+  // Check for key validity.
+  if (apiKeys.indexOf(key) === -1) next(error(401, "Invalid API Key"));
+
+  // Valid key! Store it in req.key for route access.
+  req.key = key;
+  next();
 });
 
-/**
- * GET /api/posts/:id
- */
+// Use our Routes
+app.use("/api/users", users);
+app.use("/api/posts", posts);
 
-app.get("/api/posts/:id", (req, res, next) => {
-  const post = posts.find((p) => p.id == req.params.id);
-  if (post) res.json(post);
-  else next();
-});
-
-// WIP (Root Route PATH)
-
+// Adding some HATEOAS links.
 app.get("/", (req, res) => {
-  res.send("Work in progress");
+  res.json({
+    links: [
+      {
+        href: "/api",
+        rel: "api",
+        type: "GET",
+      },
+    ],
+  });
+});
+
+// // WIP (Root Route PATH)
+// app.get("/", (req, res) => {
+//   res.send("Work in progress");
+// });
+
+// Adding some HATEOAS links.
+app.get("/api", (req, res) => {
+  res.json({
+    links: [
+      {
+        href: "api/users",
+        rel: "users",
+        type: "GET",
+      },
+      {
+        href: "api/users",
+        rel: "users",
+        type: "POST",
+      },
+      {
+        href: "api/posts",
+        rel: "posts",
+        type: "GET",
+      },
+      {
+        href: "api/posts",
+        rel: "posts",
+        type: "POST",
+      },
+    ],
+  });
 });
 
 // 404 Status Code = Not Found Middleware
 app.use((req, res, next) => {
-  res.status(404);
-  res.json({ error: "Resource not found!" });
+  next(error, (404, "Resource not found!"));
+});
+
+// Error-handling middleware.
+// Any call to next() that includes an
+// Error() will skip regular middleware and
+// only be processed by error-handling middleware.
+// This changes our error handling throughout the application,
+// but allows us to change the processing of ALL errors
+// at once in a single location, which is important for
+// scalability and maintainability.
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.json({ error: err.message });
 });
 
 app.listen(port, () => {

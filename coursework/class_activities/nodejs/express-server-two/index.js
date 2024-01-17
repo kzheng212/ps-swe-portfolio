@@ -76,6 +76,10 @@ app.get("/download", (req, res) => {
   res.download("./assets/photo-15.png");
 });
 
+
+/**
+ * Catch all route for redirect
+ */
 app.all("*", (req, res) => {
   res.redirect("/login"); // Responds that Redirects to another page
   //? One or the other
