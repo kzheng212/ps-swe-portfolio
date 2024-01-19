@@ -1,15 +1,19 @@
-import express from "express";
 import "./loadEnv.js";
-// import dotenv from "dotenv";
-// dotenv.config();
+import { conn } from "./db/conn.js";
+conn();
+import express from "express";
+import morgan from "morgan";
+
 import grades from "./routes/grades.js";
 
-// console.log(process.env.ATLAS_URI);
+console.log(process.env.ATLAS_URI);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(morgan("dev"));
 app.use(express.json());
+
 app.use("/grades", grades);
 
 app.get("/", (req, res) => {
@@ -17,10 +21,10 @@ app.get("/", (req, res) => {
 });
 
 // Global error handling
-app.use((err, _req, res, next) => {
+app.use((err, req, res, next) => {
   res.status(500).send("Seems like we messed up somewhere...");
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running on port: ${PORT}`);
 });

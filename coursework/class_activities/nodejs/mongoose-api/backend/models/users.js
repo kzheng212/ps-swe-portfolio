@@ -28,9 +28,10 @@ const usersSchema = new mongoose.Schema({
   },
   department: {
     type: String,
-    enum: ["IT", "UX/UI", "DEV", "HR"],
+    enum: ["IT", "UX", "DEV", "HR"],
   },
-  // Prsented
+  // Demonstrated but not really implemented in class activity
+  // Nice to know
   comments: [
     {
       user: String,
