@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script scr="./src/index.js" defer></script>
-    <title>Wish List App</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./src/index.js" defer></script>
+    <title>Login/Sign-Up Form</title>
 </head>
+
 <body>
+    <h1>Login/Sign-Up Form</h1>
+
     <div>
-        <h1>My WishList</h1>
-        <form action="" id="wishlistForm">
-            <label for=""></label>
-            <button type="submit">Add item</button>
+        <form>
+            <label name="email">Email</label>
+            <input type="text" id="email" name="email" required />
+            <br />
+
+            <label name="password">Password</label>
+            <input type="password" id="password" name="password" required />
+
+            <button type="submit">Sign Up</button>
         </form>
     </div>
+
+
 </body>
+
 </html>
